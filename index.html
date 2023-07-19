@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>LRU</title>
+</head>
+<body>
+    <form action="" class="app" id="app">
+        <h2>Page Faults</h2>
+        <div class="items">
+            <button type="button" class="item">FIFO</button>
+            <button type="button" class="item">LFU</button>
+            <button type="button" class="item">MFU</button>
+            <button type="button" class="item">OPT</button>
+            <button type="button" class="item">LRU</button>
+        </div>
+        <div class="Pages">
+            <label for="pages">Nhập tất cả các trang cách nhau bởi khoảng trắng</label>
+            <input type="text" name="pages" id="pages" class="pages" placeholder="VD: 1 2 3 4 5 6 7 8 3 4 5 6">
+        </div>
+        <div class="Capacity">
+            <label for="capacity">Nhập số lượng khung trang tối đa</label>
+            <input type="text" name="capacity" id="capacity" class="capacity" placeholder="VD: 3">
+        </div>
+        <div class="Submit">
+            <button class="submit" type="button">Số lỗi trang</button>
+            <span class="input"></span>
+        </div>
+    </form>
+    <script src="start.js"></script>
+    <script>
+        var $$ = document.querySelectorAll.bind(document);
+        var $ = document.querySelector.bind(document);
+        var items = document.querySelectorAll('.item');
+        function search(key, fr) {
+            for (let i = 0; i < fr.length; i++) {
+                if (fr[i] === key) {
+                return true;
+                }
+            }
+            return false;
+        }
+        function predict(pg, fr, pn, index) {
+            let res = -1, farthest = index;
+            for (let i = 0; i < fr.length; i++) {
+                let j;
+                for (j = index; j < pn; j++) {
+                    if (fr[i] === pg[j]) {
+                        if (j > farthest) {
+                            farthest = j;
+                            res = i;
+                        }
+                        break;
+                    }
+                }
+                if (j === pn) {
+                return i;
+                }
+            }
+            return (res === -1) ? 0 : res;
+        }
+        function pageFaults0(pages, c){
+                    var n = pages.length;
+                    let s = new Set();
+                    var indexes = [];
+                    let page_faults = 0;
+                    for (let i=0; i<n; i++){
+                        if (s.size < c){
+                            if (!s.has(pages[i])){
+                                s.add(pages[i]);
+                                page_faults++;
+                                indexes.push(pages[i]);
+                            }
+                        }
+                        else{
+                
+                            if (!s.has(pages[i])){
+                                let val = indexes[0];
+      
+                                indexes.shift();
+      
+                                s.delete(val);
+                                s.add(pages[i]);
+                                indexes.push(pages[i]);
+                                page_faults++;
+                            }
+                        }
+                    }
+      
+                    return page_faults;
+                }
+        function pageFaults1(pages, c){
+                    let count = 0;
+                    var n = pages.length;
+                    let v = [];
+                    let mp = {};
+ 
+                    for (let i = 0; i <= n - 1; i++) {
+                        // Find if element is present in memory or not
+                        let idx = v.indexOf(pages[i]);
+ 
+                        // If element is not present
+                        if (idx == -1) {
+                            // If memory is full
+                            if (v.length == c) {
+                                // Decrease the frequency
+                                let leastFreqPage = v[0];
+                                mp[leastFreqPage] = mp[leastFreqPage] - 1;
+ 
+                                // Remove the first element as
+                                // It is least frequently used
+                                v.shift();
+                            }
+ 
+                            // Add the element at the end of memory
+                            v.push(pages[i]);
+                            // Increase its frequency
+                            mp[pages[i]] = (mp[pages[i]] || 0) + 1;
+ 
+                            // Increment the count
+                            count++;
+                        } else {
+                            // If element is present
+                            // Remove the element
+                            // And add it at the end
+                            // Increase its frequency
+                            let page = v.splice(idx, 1)[0];
+                            v.push(page);
+                            mp[page] = mp[page] + 1;
+                        }
+ 
+                        // Compare frequency with other pages
+                        // starting from the 2nd last page
+                        let k = v.length - 2;
+                        while (k >= 0 && mp[v[k]] > mp[v[k + 1]]) {
+                        [v[k], v[k + 1]] = [v[k + 1], v[k]];
+                        k--;
+                        }
+                    }
+                    return count;
+                }
+        function pageFaults2(pages, c){
+                    let count = 0;
+                    var n = pages.length;
+                    let v = [];
+                    let mp = {};
+ 
+                    for (let i = 0; i <= n - 1; i++) {
+                        // Find if element is present in memory or not
+                        let idx = v.indexOf(pages[i]);
+ 
+                        // If element is not present
+                        if (idx == -1) {
+                            // If memory is full
+                            if (v.length == c) {
+                                // Decrease the frequency
+                                let leastFreqPage = v[0];
+                                mp[leastFreqPage] = mp[leastFreqPage] - 1;
+ 
+                                // Remove the first element as
+                                // It is least frequently used
+                                v.shift();
+                            }
+ 
+                            // Add the element at the end of memory
+                            v.push(pages[i]);
+                            // Increase its frequency
+                            mp[pages[i]] = (mp[pages[i]] || 0) + 1;
+ 
+                            // Increment the count
+                            count++;
+                        } else {
+                            // If element is present
+                            // Remove the element
+                            // And add it at the end
+                            // Increase its frequency
+                            let page = v.splice(idx, 1)[0];
+                            v.push(page);
+                            mp[page] = mp[page] + 1;
+                        }
+ 
+                        // Compare frequency with other pages
+                        // starting from the 2nd last page
+                        let k = v.length - 2;
+                        while (k >= 0 && mp[v[k]] < mp[v[k + 1]]) {
+                        [v[k], v[k + 1]] = [v[k + 1], v[k]];
+                        k--;
+                        }
+                    }
+                    return count;
+                }
+                function pageFaults3(pages, c){
+                    let n = pages.length
+                    let fr = [];
+                    let hit = 0;
+                    for (let i = 0; i < n; i++) {
+                        if (search(pages[i], fr)) {
+                            hit++;
+                            continue;
+                        }
+                        if (fr.length < c) {
+                            fr.push(pages[i]);
+                        }
+                        else {
+                            let j = predict(pages, fr, n, i + 1);
+                            fr[j] = pages[i];
+                        }
+                    }
+                    return n-hit;
+                }
+        function pageFaults4(pages, c){
+                    let n = pages.length;
+                    let count = 0;
+
+                    let memory = [];
+                    for (let i = 0; i < n; i++) {
+ 
+                        let index = memory.indexOf(pages[i]);
+                        if (index === -1) {
+                            if (memory.length === c) {
+ 
+                                memory.shift();
+                            }
+ 
+                        memory.push(pages[i]);
+                        count++;
+                        } else {
+                            memory.splice(index, 1);
+                            memory.push(pages[i]);
+                        }
+                    }
+                    return count;
+                }
+
+        items.forEach((item, index) => {
+            item.onclick = function(){
+                if($('.item.action')){
+                    $('.item.action').classList.remove('action');
+                }
+                this.classList.add('action');
+                var text = this.innerHTML;
+                var pgs = document.querySelector('.pages');
+                var cs = document.querySelector('.capacity');
+                var submit = document.querySelector('.submit');
+                var input = document.querySelector('.input');
+
+                submit.onclick = function(){
+                    var pages1 = pgs.value.split(' ');
+                    pages = pages1.map((page)=>{
+                        return Number(page);
+                    })
+                    var c = Number(cs.value);
+                    console.log(c);
+                    if(pages!='' && c!=0){
+                        if(index === 0){
+                            var result = pageFaults0(pages, c);
+                            input.innerHTML = `Số lỗi trang theo thuật toán ${text} là ${result}`;
+                        }
+                        else if(index === 1){
+                            var result = pageFaults1(pages, c);
+                            input.innerHTML = `Số lỗi trang theo thuật toán ${text} là ${result}`;
+                        }
+                        else if(index === 2){
+                            var result = pageFaults2(pages, c);
+                            input.innerHTML = `Số lỗi trang theo thuật toán ${text} là ${result}`;
+                        }
+                        else if(index === 3){
+                            var result = pageFaults3(pages, c);
+                            input.innerHTML = `Số lỗi trang theo thuật toán ${text} là ${result}`;
+                        }
+                        else {
+                            var result = pageFaults4(pages, c);
+                            input.innerHTML = `Số lỗi trang theo thuật toán ${text} là ${result}`;
+                        }
+                    }
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>

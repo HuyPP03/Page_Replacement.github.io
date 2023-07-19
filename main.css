@@ -1,0 +1,93 @@
+*root{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.app{
+    width: 500px;
+    margin: auto;
+    margin-top: 150px;
+    min-height: 300px;
+    padding: 15px;
+    background-color: aqua;
+    border-radius: 4px;
+    box-shadow: 4px 8px 8px rgba(0,0,0,0.2);
+    border: 2px solid #c0bfbf;
+}
+.items{
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0 20px 0;
+}
+.item{
+    text-align: center;
+    margin: 0 4px 10px 4px;
+    background-color: aliceblue;
+    flex: 1;
+    height: 30px;
+    align-items: center;
+    line-height: 30px;
+    color: red;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+.action{
+    background-color: rgb(186, 186, 186);
+    color: black;
+}
+.Pages{
+    display: flex;
+    flex-direction: column;
+}
+h2{
+    font-size: 32px;
+    text-align: center;
+    display: block;
+}
+.pages{
+    border: 1px solid #4d4c4c;
+    padding: 0 10px;
+    border-radius: 4px;
+    margin: 10px 0 24px 0;
+    height: 30px;
+}
+.Capacity{
+    display: flex;
+    flex-direction: column;
+}
+.capacity{
+    border: 1px solid #4d4c4c;
+    padding: 0 10px;
+    border-radius: 4px;
+    margin: 10px 0 20px 0;
+    height: 30px;
+}
+label{
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+.Submit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.submit{
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    height: 35px;
+    margin: 10px 0;
+    background-color: #e1ff00;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.input{
+    font-size: 24px;
+    font-weight: 600;
+    margin: 10px;
+}
